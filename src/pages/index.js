@@ -1,4 +1,6 @@
-// import { Inter } from 'next/font/google'
+import Link from "next/link";
+import Image from "next/image";
+
 import { Work_Sans } from 'next/font/google'
 
 const roboto = Work_Sans({
@@ -12,7 +14,13 @@ export default function Home() {
       <div className={`m-auto self-center justify-self-center ${roboto.className}`}>
         <h1>Test</h1>
 
-        
+        <div>
+          {/* <Image src="public/wheels-app-logo.gif" /> */}
+        </div>
+        <Link href={'/test'}>
+            TEST
+        </Link>
+
 
       </div>
 
