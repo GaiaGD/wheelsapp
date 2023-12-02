@@ -1,29 +1,24 @@
 import Link from "next/link";
-import Image from "next/image";
-
-import { Work_Sans } from 'next/font/google'
-
-const roboto = Work_Sans({
-  subsets: ['latin']
-})
+import Layout from "@/components/layout";
+import Button from "@/components/button";
 
 export default function Home() {
+
   return (
-    <main className={`grid h-screen ${roboto.className}`}>
-      
-      <div className={`m-auto self-center justify-self-center ${roboto.className}`}>
-        <h1>Test</h1>
-
-        <div>
-          {/* <Image src="public/wheels-app-logo.gif" /> */}
+    <Layout>
+      <div>
+        <div className="">
+          <img src="/wheels-app-logo.gif" alt="Window" className="max-h-40 mx-auto"/>        
         </div>
-        <Link href={'/test'}>
-            TEST
+        <div className="py-10">
+          <img src="/wa-logotype.svg" alt="Logo" className="max-w-[200px] w-full mx-auto" />
+        </div>        
+        <Link href={"/input"}>
+          <Button>
+            <p>Let's go!</p>
+          </Button>
         </Link>
-
-
       </div>
-
-    </main>
+    </Layout>
   )
 }
