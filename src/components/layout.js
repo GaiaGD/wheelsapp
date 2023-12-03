@@ -10,9 +10,11 @@ const work = Work_Sans({
 export default function Layout({ children }) {
 
     return (
-        <main className={`grid h-screen ${work.className}`}>
-            <div className={`w-[600px] m-auto self-center justify-self-center`}>  
-                {children}
+        <main className={`h-screen ${work.className} flex justify-center items-center`}>
+            <div className={`md:w-[600px] w-full`}>
+                <div>
+                    {children}
+                </div>
             </div>
         </main>
     )
