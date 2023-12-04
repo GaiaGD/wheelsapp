@@ -1,6 +1,7 @@
 import Layout from "@/components/layout"
 import BoardingDots from "@/components/boardingDots"
 import { Cloud, Sun, Plane } from "@/components/icons"
+import Link from "next/link"
 
 export default function Dashboard() {
 
@@ -27,12 +28,12 @@ export default function Dashboard() {
                 </div>
 
                 {/* boarding ticket */}
-                <div className="md:h-[60vh] md:top-[20%] h-[70vh] top-[15%] left-[5%] right-[5%] shadow-2xl absolute bg-off-white rounded-[20px]">
+                <div className="md:h-[60vh] md:top-[20%] h-[66vh] top-[17%] left-[5%] right-[5%] shadow-2xl absolute bg-off-white rounded-[20px]">
 
                     <BoardingDots />
                     <div className="h-full grid content-between">
                         {/* departure */}
-                        <div className="p-4">
+                        <div className="px-4 pt-4">
 
                             <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
                                 <div className="w-3/6">
@@ -40,7 +41,7 @@ export default function Dashboard() {
                                     <p className="text-sm">Rome, Italy</p>
                                 </div>
                                 <div className="w-3/6">
-                                    <h1 className="text-outline text-4xl font-light">16:15</h1>
+                                    <h1 className="text-4xl font-regular">10:40</h1>
                                     <p className="text-sm">Delay: 20min</p>
                                 </div>
                             </div>
@@ -78,11 +79,11 @@ export default function Dashboard() {
                         </div>
 
                         {/* arrival */}
-                        <div className="p-4">
+                        <div className="px-4 p-4">
 
                             <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
                                 <div className="w-3/6">
-                                    <h1 className="text-outline text-4xl font-light">16:15</h1>
+                                    <h1 className="text-4xl font-regular">14:50</h1>
                                     <p className="text-sm">Delay: 20min</p>
                                 </div>
                                 <div className="w-3/6">
@@ -110,6 +111,14 @@ export default function Dashboard() {
 
                 </div>
 
+                {/* go back */}
+                <Link href={"/input"}>
+                    <div className="h-[9vh] w-[9vh] bottom-[2%] left-[5%] shadow-2xl absolute bg-off-white rounded-full grid place-content-center ">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                        </svg>
+                    </div>
+                </Link>
             </div>
         </Layout>
     )

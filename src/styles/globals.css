@@ -16,7 +16,7 @@ body {
 
 .text-outline {
   -webkit-text-stroke-width: 1.5px;
-  -webkit-text-stroke-color: black;
+  -webkit-text-stroke-color: rgb(35, 31, 32);
 }
 
 

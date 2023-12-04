@@ -1,20 +1,25 @@
+import { useState, useEffect, useContext } from "react";
+import { AppContext } from "@/context/context";
 import Link from "next/link";
 import Layout from "@/components/layout"
 import Button from "@/components/button"
 import FormInput from "@/components/formInput";
-import { useState, useEffect } from "react";
 import axios from 'axios';
 
 export default function Input() {
+    const {getDepartureIata} = useContext(AppContext)
 
     const [airports, setAirports] = useState([])
     const [airlines, setAirlines] = useState([])
     const [airportsDepartureMatches, setAirportsDepartureMatches] = useState([])
     const [airportsArrivalMatches, setAirportsArrivalMatches] = useState([])
     const [airlinesMatches, setAirlinesMatches] = useState([])
-    
-    const [showDropdown, setShowDropdown] = useState({showDropdownDep: false, showDropdownArr: false, showDropdownAirline: false})
-    
+        
+    const changeInputDepValue = (selectedIata) => {
+        let depInput = document.getElementById("form-dep-input")
+        depInput.value = selectedIata
+        setAirportsDepartureMatches([])
+    }
     
     useEffect(() => {
         const loadAirports = async () => {
@@ -31,7 +36,7 @@ export default function Input() {
     }, [])
 
     const searchDepartureAirports = (inputText) => {
-        if(inputText === " "){
+        if(inputText === ""){
             setAirportsDepartureMatches([])
         } else {
             // filtering the results with filter and a regex
@@ -44,7 +49,13 @@ export default function Input() {
         }
     }
 
-
+    // check if iata is valid
+    let charIsLetter = (char) => {
+        if (typeof char !== 'string') {
+            return false;
+        }
+        return /^[a-zA-Z]+$/.test(char);
+    }
 
     return (
         <Layout>
@@ -58,9 +69,21 @@ export default function Input() {
                 <div className="md:mx-20 md:mb-20 mb-12">
                     <FormInput>
                         <input id="form-dep-input" onChange={(e) => searchDepartureAirports(e.target.value) } className="bg-off-white w-full focus:outline-none text-center" type="text" placeholder="departure airport" />
-                        {/* <div style={{ width: 'calc(100% - 3rem)' }} className="mt-4 rounded-[20px] h-20 bg-white fixed p-1 backdrop-blur-md bg-white/70">
-
-                        </div> */}
+                        { airportsDepartureMatches.length >= 1 &&
+                            
+                            <div style={{ width: 'calc(100% - 3rem)' }} className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white/80 shadow-2xl">
+                                { airportsDepartureMatches.map((airport, index) => {
+                                    if(charIsLetter(airport.IATA)){
+                                        return (
+                                            <div onClick={(e) => {getDepartureIata(airport.IATA), changeInputDepValue(airport.IATA), console.log(e)}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}> <p>{airport.city}</p>
+                                                <p><span className="font-semibold">{airport.IATA}</span>, {airport.name}</p>
+                                                <p>{airport.country}</p>
+                                            </div>
+                                        )
+                                    }
+                                })}
+                            </div>
+                        }
                     </FormInput>
                     
                     <FormInput>
