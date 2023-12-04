@@ -20,10 +20,14 @@ export default function Layout({ children }) {
 
     return (
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.5 }}
+        initial={{ x: 300, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 300, opacity: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+        }}
       >
           <main className={`h-screen ${inter.className} flex justify-center items-center`}>
               <div className={`md:w-[600px] w-full`}>
