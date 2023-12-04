@@ -1,5 +1,6 @@
 import Layout from "@/components/layout"
 import BoardingDots from "@/components/boardingDots"
+import { Cloud, Sun, Plane } from "@/components/icons"
 
 export default function Dashboard() {
 
@@ -26,68 +27,81 @@ export default function Dashboard() {
                 </div>
 
                 {/* boarding ticket */}
-                <div className="h-[60vh] top-[20%] left-[5%] right-[5%] shadow-2xl absolute bg-off-white rounded-[20px]">
+                <div className="md:h-[60vh] md:top-[20%] h-[70vh] top-[15%] left-[5%] right-[5%] shadow-2xl absolute bg-off-white rounded-[20px]">
 
                     <BoardingDots />
-                    <div className="h-full">
+                    <div className="h-full grid content-between">
                         {/* departure */}
-                        <div className="h-[35%] p-2">
-                            <div className="flex justify-between border-dotted border-brown-burnt border-b-[1px]">
-                                <div>
-                                    <h1>JFK</h1>
-                                    <p>New York, USA</p>
+                        <div className="p-4">
+
+                            <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
+                                <div className="w-3/6">
+                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">FCO</h1>
+                                    <p className="text-sm">Rome, Italy</p>
                                 </div>
-                                <div>
-                                    <h1>16:15</h1>
+                                <div className="w-3/6">
+                                    <h1 className="text-outline text-4xl font-light">16:15</h1>
                                     <p>Delay: 20min</p>
                                 </div>
                             </div>
-                            <div className="flex justify-between">
-                                <div>
-                                    <p>Cloudy</p>
-                                    <p>25</p>
+
+                            <div className="flex justify-between py-2">
+                                <div className="w-3/6">
+                                <p className="text-sm">Sunny</p>
+                                    <div className="flex">
+                                        <p>25</p>
+                                        <Sun />
+                                    </div>
                                 </div>
-                                <div>
-                                    <p>Terminal: 20</p>
-                                    <p>Gate: 34</p>
+                                <div className="w-3/6">
+                                    <p className="text-sm">Terminal: 20</p>
+                                    <p className="text-sm">Gate: 34</p>
                                 </div>
                             </div>
+
                         </div>
 
                         {/* moving plane */}
-                        <div className="h-[30%] px-2 text-center">
+                        <div className="px-4 text-center">
                             {/* <div className="relative border-b-dashed top-[50%] border-[1px] bg-brown-burnt mx-8"></div> */}
-                            <p>FLIGHT</p>
-                            <h1>DL 6589</h1>
+                            <p className="text-sm">FLIGHT</p>
+                            <h1 className="text-3xl font-medium">DL 6589</h1>
+                            <p className="text-sm">Delta Airlines</p>
 
-                            <div className="relative w-full">
-                                <div className="absolute w-full border-b-dashed border-[1px] border-brown-burnt">
-
+                            <div className="relative w-full h-8">
+                                <div className="top-[50%] absolute w-full border-dotted border-zinc-400 border-b-[1px]"></div>
+                                <div className="absolute">
+                                    <Plane />
                                 </div>
                             </div>
 
                         </div>
 
                         {/* arrival */}
-                        <div className="h-[35%] p-2">
-                            <div className="flex justify-between border-dotted border-brown-burnt border-b-[1px]">
-                                <div>
-                                    <h1>JFK</h1>
-                                    <p>New York, USA</p>
+                        <div className="p-4">
+
+                            <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
+                                <div className="w-3/6">
+                                    <h1 className="text-outline text-4xl font-light">16:15</h1>
+                                    <p className="text-sm">Delay: 20min</p>
                                 </div>
-                                <div>
-                                    <h1>16:15</h1>
-                                    <p>Delay: 20min</p>
+                                <div className="w-3/6">
+                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">JFK</h1>
+                                    <p className="text-sm">New York, USA</p>
                                 </div>
                             </div>
-                            <div className="flex justify-between">
-                                <div>
-                                    <p>Cloudy</p>
-                                    <p>25</p>
+
+                            <div className="flex justify-between py-2">
+                                <div className="w-3/6">
+                                    <p className="text-sm">Terminal: 20</p>
+                                    <p className="text-sm">Gate: 34</p>
                                 </div>
-                                <div>
-                                    <p>Terminal: 20</p>
-                                    <p>Gate: 34</p>
+                                <div className="w-3/6">
+                                    <p className="text-sm">Cloudy</p>
+                                    <div className="flex">
+                                        <p>25</p>
+                                        <Cloud />
+                                    </div>
                                 </div>
                             </div>
 

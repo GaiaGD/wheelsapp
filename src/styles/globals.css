@@ -14,6 +14,9 @@ body {
   color: rgb(var(--font-color));
 }
 
-main {
-  height: 700px;
+.text-outline {
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: black;
 }
+
+
