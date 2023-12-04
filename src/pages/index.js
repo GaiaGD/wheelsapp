@@ -6,7 +6,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="m-auto p-8">
+      <div className="m-auto p-6">
         <Link href={"/"} className="w-full">
           <img src="/wheels-app-logo.gif" alt="Window" className="max-h-40 mx-auto"/>        
         </Link>
@@ -15,7 +15,7 @@ export default function Home() {
         </div>        
         <Link href={"/input"}>
           <Button>
-            <p>Let's go!</p>
+            <p>Let&rsquo;s go!</p>
           </Button>
         </Link>
       </div>

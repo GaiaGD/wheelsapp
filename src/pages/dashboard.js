@@ -41,7 +41,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className="w-3/6">
                                     <h1 className="text-outline text-4xl font-light">16:15</h1>
-                                    <p>Delay: 20min</p>
+                                    <p className="text-sm">Delay: 20min</p>
                                 </div>
                             </div>
 
@@ -49,7 +49,7 @@ export default function Dashboard() {
                                 <div className="w-3/6">
                                 <p className="text-sm">Sunny</p>
                                     <div className="flex">
-                                        <p>25</p>
+                                        <p className="text-sm">25</p>
                                         <Sun />
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                                 <div className="w-3/6">
                                     <p className="text-sm">Cloudy</p>
                                     <div className="flex">
-                                        <p>25</p>
+                                        <p className="text-sm">25</p>
                                         <Cloud />
                                     </div>
                                 </div>
