@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const DropdownWrap = ({ children, props }) => {
 
   const myInputRef = useRef(null)
-
   const [show, setShow] = useState(false)
 
   useEffect(() => {
@@ -40,13 +40,26 @@ const DropdownWrap = ({ children, props }) => {
       };
   }, [myInputRef])
 
-    if(show){
-      return (
-        <div ref={myInputRef} style={{ width: 'calc(100% - 3rem)' }} className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white/80 shadow-2xl">
-          {children}
-        </div>
-      )
-    }
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          key="dropdown"
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 0 }}
+        >
+          <div
+            ref={myInputRef}
+            style={{ width: 'calc(100% - 3rem)' }}
+            className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white-100 shadow-2xl"
+          >
+            {children}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 
 }
 

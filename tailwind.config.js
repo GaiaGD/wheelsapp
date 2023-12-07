@@ -13,7 +13,7 @@ module.exports = {
       },
       fontFamily: {
         'sans': ['Arial', 'Helvetica', 'sans-serif'],
-      }
+      },
     },
   },
   plugins: [],
