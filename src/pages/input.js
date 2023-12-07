@@ -1,35 +1,38 @@
-import { useState, useEffect, useContext } from "react";
-import { AppContext } from "@/context/context";
-import Link from "next/link";
+import { useState, useEffect, useRef, useContext } from "react"
+import { AppContext } from "@/context/context"
+import Link from "next/link"
 import Layout from "@/components/layout"
 import Button from "@/components/button"
-import FormInput from "@/components/formInput";
-import axios from 'axios';
+import FormInput from "@/components/formInput"
+import DropdownWrap from "@/components/dropdownWrap"
 
-export default function Input() {
+export async function getServerSideProps(){
+
+    const resAirports = await fetch('https://raw.githubusercontent.com/konsalex/Airport-Autocomplete-JS/master/src/data/airports.json')
+    const airportData = await resAirports.json()
+
+    const resAirlines = await fetch('https://raw.githubusercontent.com/npow/airline-codes/master/airlines.json')
+    const airlineData = await resAirlines.json()
+
+    return {
+        props: {
+            airportsProps: airportData,
+            airlineProps: airlineData
+        }
+    }
+}
+
+export default function Input({airportsProps, airlineProps}) {
+
     const {getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
 
-    const [airports, setAirports] = useState([])
-    const [airlines, setAirlines] = useState([])
     const [airportsDepartureMatches, setAirportsDepartureMatches] = useState([])
     const [airportsArrivalMatches, setAirportsArrivalMatches] = useState([])
     const [airlinesMatches, setAirlinesMatches] = useState([])
-    
-    useEffect(() => {
-        const loadAirports = async () => {
-            const response = await axios.get('https://raw.githubusercontent.com/konsalex/Airport-Autocomplete-JS/master/src/data/airports.json')
-            setAirports(response.data)
-        }
-        loadAirports()
-    
-        const loadAirlines = async () => {
-            const response = await axios.get('https://raw.githubusercontent.com/npow/airline-codes/master/airlines.json')
-            setAirlines(response.data)
-        }
-        loadAirlines()
-    }, [])
 
-    function getMatches(airportList, inputInTheForm){
+    const [show, setShow] = useState(false)
+    
+    function getAirportsMatches(airportList, inputInTheForm){
         let results = airportList.filter((airport) => {
             // RegExp accepts text to search and flags (g - global and i -case insensitive) as parameters
             const toFind = new RegExp(`${inputInTheForm}`, "gi")
@@ -41,8 +44,10 @@ export default function Input() {
     const searchDepartureAirports = (inputText) => {
         if(inputText === ""){
             setAirportsDepartureMatches([])
+            setShow(false)
         } else {
-            setAirportsDepartureMatches(getMatches(airports, inputText))
+            setAirportsDepartureMatches(getAirportsMatches(airportsProps, inputText))
+            setShow(true)
         }
     }
 
@@ -50,15 +55,22 @@ export default function Input() {
         if(inputText === ""){
             setAirportsArrivalMatches([])
         } else {
-            setAirportsArrivalMatches(getMatches(airports, inputText))
+            setAirportsArrivalMatches(getAirportsMatches(airportsProps, inputText))
         }
     }
 
     const searchAirline = (inputText) => {
-        if(inputText === ""){
+        if(inputText === " "){
             setAirlinesMatches([])
         } else {
-            setAirlinesMatches(getMatches(airlinesMatches, inputText))
+            // filtering the results with filter and a regex
+            let matches = airlineProps.filter((airline) => {
+                // RegExp accepts text to search and flags (g - global and i -case insensitive) as parameters
+                const toFind = new RegExp(`${inputText}`, "gi")
+                return airline.name.match(toFind) || airline.country.match(toFind) || airline.iata.match(toFind)
+            })
+            setAirlinesMatches(matches)
+
         }
     }
 
@@ -74,6 +86,29 @@ export default function Input() {
         return /^[a-zA-Z]+$/.test(char);
     }
 
+    function handleDeparture (departureIata, relativeInput){
+        getDepartureIata(departureIata)
+        changeInputValue(departureIata, relativeInput)
+        setAirportsDepartureMatches([])
+    }
+
+    function handleArrival (arrivalIata, relativeInput){
+        getArrivalIata(arrivalIata)
+        changeInputValue(arrivalIata, relativeInput)
+        setAirportsArrivalMatches([])
+    }
+
+    // dropdown component
+    function Dropdown ({airportProp, onClick, index}){
+        return (
+            <div onClick={onClick} index={index} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4">
+                <p>{airportProp.city}</p>
+                <p><span className="font-semibold">{airportProp.IATA}</span>, {airportProp.name}</p>
+                <p>{airportProp.IATA}</p>
+            </div>
+        )
+    }
+
     return (
         <Layout>
             <div className="p-6">
@@ -84,26 +119,24 @@ export default function Input() {
                     </Link>
                 </div>
                 <div className="md:mx-20 md:mb-20 mb-12">
+
                     <FormInput>
 
                         <div className="idContainer" onChange={(e) => searchDepartureAirports(e.target.value)}>
                             <input id="form-dep-input" className="idContainer bg-off-white w-full focus:outline-none text-center" type="text" placeholder="departure airport" />
                             
-                            { airportsDepartureMatches.length >= 1 &&
-                                
-                                <div style={{ width: 'calc(100% - 3rem)' }} className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white/80 shadow-2xl">
+                            <DropdownWrap props={airportsDepartureMatches} >
+                                                                    
                                     { airportsDepartureMatches.map((airport, index) => {
                                         if(charIsLetter(airport.IATA)){
                                             return (
-                                                <div onClick={(e) => {getDepartureIata(airport.IATA), changeInputValue(airport.IATA, e.target.closest('.idContainer')), setAirportsDepartureMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}> <p>{airport.city}</p>
-                                                    <p><span className="font-semibold">{airport.IATA}</span>, {airport.name}</p>
-                                                    <p>{airport.country}</p>
-                                                </div>
+                                                <>
+                                                    <Dropdown airportProp={airport} index={index} onClick={(e) => handleDeparture(airport.IATA, e.target.closest('.idContainer'))} />
+                                                </>
                                             )
                                         }
                                     })}
-                                </div>
-                            }
+                            </DropdownWrap>
 
                         </div>
 
@@ -112,49 +145,43 @@ export default function Input() {
                     <FormInput>
 
                         <div className="idContainer" onChange={(e) => searchArrivalAirports(e.target.value)}>
-                            <input id="form-arr-input" className="idContainer bg-off-white w-full focus:outline-none text-center" type="text" placeholder="departure airport" />
+                            <input id="form-arr-input" className="idContainer bg-off-white w-full focus:outline-none text-center" type="text" placeholder="arrival airport" />
                             
-                            { airportsArrivalMatches.length >= 1 &&
-                                
-                                <div style={{ width: 'calc(100% - 3rem)' }} className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white/80 shadow-2xl">
-                                    { airportsArrivalMatches.map((airport, index) => {
-                                        if(charIsLetter(airport.IATA)){
-                                            return (
-                                                <div onClick={(e) => {getArrivalIata(airport.IATA), changeInputValue(airport.IATA, e.target.closest('.idContainer')), setAirportsArrivalMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}> <p>{airport.city}</p>
-                                                    <p><span className="font-semibold">{airport.IATA}</span>, {airport.name}</p>
-                                                    <p>{airport.country}</p>
-                                                </div>
-                                            )
-                                        }
-                                    })}
-                                </div>
-                            }
+                            <DropdownWrap props={airportsArrivalMatches} >
+                                { airportsArrivalMatches.map((airport, index) => {
+                                    if(charIsLetter(airport.IATA)){
+                                        return (
+                                            <>
+                                                <Dropdown airportProp={airport} index={index} onClick={(e) => handleArrival(airport.IATA, e.target.closest('.idContainer'))} />
+                                            </>
+                                        )
+                                    }
+                                })}
+                            </DropdownWrap>
 
                         </div>
 
                     </FormInput>
 
                     <FormInput>
-                        {/* <input id="form-airline-input" className="bg-off-white w-full focus:outline-none text-center" type="text" placeholder="airline" /> */}
 
                         <div className="idContainer" onChange={(e) => searchAirline(e.target.value)}>
-                            <input id="form-arr-input" className="idContainer bg-off-white w-full focus:outline-none text-center" type="text" placeholder="departure airport" />
+                            <input id="form-arr-input" className="idContainer bg-off-white w-full focus:outline-none text-center" type="text" placeholder="airline" />
                             
-                            { airlinesMatches.length >= 1 &&
-                                
-                                <div style={{ width: 'calc(100% - 3rem)' }} className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white/80 shadow-2xl">
+                            <DropdownWrap props={airlinesMatches} >
+
                                     { airlinesMatches.map((airline, index) => {
-                                        if(charIsLetter(airline.IATA)){
+                                        if(charIsLetter(airline.iata)){
                                             return (
-                                                <div onClick={(e) => {getAirlineIata(airline.IATA), changeInputValue(airline.IATA, e.target.closest('.idContainer')), setAirlinesMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}> <p>test</p>
-                                                    {/* <p><span className="font-semibold">{airport.IATA}</span>, {airport.name}</p>
-                                                    <p>{airport.country}</p> */}
+                                                <div onClick={(e) => {getAirlineIata(airline.iata), changeInputValue(airline.iata, e.target.closest('.idContainer')), setAirlinesMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}>
+                                                    <p><span className="font-semibold">{airline.iata}</span></p>
+                                                    <p>{airline.name}</p>
+                                                    <p>{airline.country}</p>
                                                 </div>
                                             )
                                         }
                                     })}
-                                </div>
-                            }
+                            </DropdownWrap>
 
                         </div>
 

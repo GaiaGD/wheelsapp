@@ -21,10 +21,6 @@ export function AppContextProvider({children}){
         setAirlineIata(iataCode)
     }
 
-    console.log(departureIata)
-    console.log(arrivalIata)
-
-
     return (
         <AppContext.Provider value={{
                 departureIata,
