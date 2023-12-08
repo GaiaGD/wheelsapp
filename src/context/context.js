@@ -9,6 +9,8 @@ export function AppContextProvider({children}){
     const [arrivalIata, setArrivalIata] = useState('')
     const [airlineIata, setAirlineIata] = useState('')
 
+    const [validForm, setValidForm] = useState(false)
+
     function getDepartureIata(iataCode){
         setDepartureIata(iataCode)
     }
@@ -26,6 +28,7 @@ export function AppContextProvider({children}){
                 departureIata,
                 arrivalIata,
                 airlineIata,
+                validForm,
                 getDepartureIata,
                 getArrivalIata,
                 getAirlineIata

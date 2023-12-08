@@ -43,20 +43,20 @@ const DropdownWrap = ({ children, props }) => {
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
-          key="dropdown"
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 0 }}
-        >
+        // <motion.div
+        //   key="dropdown"
+        //   initial={{ opacity: 0, y: 0 }}
+        //   animate={{ opacity: 1, y: 0 }}
+        //   exit={{ opacity: 0, y: 0 }}
+        // >
           <div
             ref={myInputRef}
             style={{ width: 'calc(100% - 3rem)' }}
-            className="max-h-96 overflow-auto rounded-[20px] fixed bg-white backdrop-blur-md bg-white-100 shadow-2xl"
+            className="z-40 max-h-72 overflow-auto rounded-[20px] fixed backdrop-blur-md bg-white shadow-2xl"
           >
             {children}
           </div>
-        </motion.div>
+        // </motion.div>
       )}
     </AnimatePresence>
   )

@@ -1,9 +1,29 @@
+import { useState, useContext } from "react"
+import { AppContext } from "@/context/context"
 import Layout from "@/components/layout"
 import BoardingDots from "@/components/boardingDots"
 import { Cloud, Sun, Plane } from "@/components/icons"
 import Link from "next/link"
 
+// export async function getServerSideProps(){
+
+    // const resAirports = await fetch('https://raw.githubusercontent.com/konsalex/Airport-Autocomplete-JS/master/src/data/airports.json')
+    // const airportData = await resAirports.json()
+
+    // const resAirlines = await fetch('https://raw.githubusercontent.com/npow/airline-codes/master/airlines.json')
+    // const airlineData = await resAirlines.json()
+
+    // return {
+    //     props: {
+    //         airportsProps: airportData,
+    //         airlineProps: airlineData
+    //     }
+    // }
+// }
+
 export default function Dashboard() {
+
+    const {departureIata, arrivalIata, airlineIata} = useContext(AppContext)
 
     const backgroundImageTop = {
         backgroundImage: 'url("https://images.unsplash.com/photo-1529260830199-42c24126f198?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
@@ -16,6 +36,8 @@ export default function Dashboard() {
         backgroundSize: 'cover',
         backgroundPosition: 'center'
     }
+
+
 
     return (
         <Layout>

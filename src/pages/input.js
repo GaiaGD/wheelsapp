@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from "react"
+import { useState, useContext } from "react"
 import { AppContext } from "@/context/context"
 import Link from "next/link"
 import Layout from "@/components/layout"
@@ -24,14 +24,17 @@ export async function getServerSideProps(){
 
 export default function Input({airportsProps, airlineProps}) {
 
-    const {getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
+    const {departureIata, arrivalIata, airlineIata, getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
 
     const [airportsDepartureMatches, setAirportsDepartureMatches] = useState([])
     const [airportsArrivalMatches, setAirportsArrivalMatches] = useState([])
     const [airlinesMatches, setAirlinesMatches] = useState([])
 
-    const [show, setShow] = useState(false)
+    let clickable = departureIata !== '' && arrivalIata !== '' && airlineIata !== ''
+    console.log(clickable)
     
+    // {{ condition ? 'pointer-events-none bg-gray-400' : '' }}
+
     function getAirportsMatches(airportList, inputInTheForm){
         let results = airportList.filter((airport) => {
             // RegExp accepts text to search and flags (g - global and i -case insensitive) as parameters
@@ -44,10 +47,8 @@ export default function Input({airportsProps, airlineProps}) {
     const searchDepartureAirports = (inputText) => {
         if(inputText === ""){
             setAirportsDepartureMatches([])
-            setShow(false)
         } else {
             setAirportsDepartureMatches(getAirportsMatches(airportsProps, inputText))
-            setShow(true)
         }
     }
 
@@ -104,7 +105,7 @@ export default function Input({airportsProps, airlineProps}) {
             <div onClick={onClick} index={index} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4">
                 <p>{airportProp.city}</p>
                 <p><span className="font-semibold">{airportProp.IATA}</span>, {airportProp.name}</p>
-                <p>{airportProp.IATA}</p>
+                <p>{airportProp.country}</p>
             </div>
         )
     }
@@ -127,15 +128,16 @@ export default function Input({airportsProps, airlineProps}) {
                             
                             <DropdownWrap props={airportsDepartureMatches} >
                                                                     
-                                    { airportsDepartureMatches.map((airport, index) => {
-                                        if(charIsLetter(airport.IATA)){
-                                            return (
-                                                <>
-                                                    <Dropdown airportProp={airport} index={index} onClick={(e) => handleDeparture(airport.IATA, e.target.closest('.idContainer'))} />
-                                                </>
-                                            )
-                                        }
-                                    })}
+                                { airportsDepartureMatches.map((airport, index) => {
+                                    if(charIsLetter(airport.IATA)){
+                                        return (
+                                            <>
+                                                <Dropdown airportProp={airport} index={index} onClick={(e) => handleDeparture(airport.IATA, e.target.closest('.idContainer'))} />
+                                            </>
+                                        )
+                                    }
+                                })}
+                                
                             </DropdownWrap>
 
                         </div>
@@ -170,17 +172,18 @@ export default function Input({airportsProps, airlineProps}) {
                             
                             <DropdownWrap props={airlinesMatches} >
 
-                                    { airlinesMatches.map((airline, index) => {
-                                        if(charIsLetter(airline.iata)){
-                                            return (
-                                                <div onClick={(e) => {getAirlineIata(airline.iata), changeInputValue(airline.iata, e.target.closest('.idContainer')), setAirlinesMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}>
-                                                    <p><span className="font-semibold">{airline.iata}</span></p>
-                                                    <p>{airline.name}</p>
-                                                    <p>{airline.country}</p>
-                                                </div>
-                                            )
-                                        }
-                                    })}
+                                { airlinesMatches.map((airline, index) => {
+                                    if(charIsLetter(airline.iata)){
+                                        return (
+                                            <div onClick={(e) => {getAirlineIata(airline.iata), changeInputValue(airline.iata, e.target.closest('.idContainer')), setAirlinesMatches([])}} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4" key={index}>
+                                                <p>{airline.name}</p>
+                                                <p><span className="font-semibold">{airline.iata}</span></p>
+                                                <p>{airline.country}</p>
+                                            </div>
+                                        )
+                                    }
+                                })}
+                                
                             </DropdownWrap>
 
                         </div>
@@ -188,11 +191,14 @@ export default function Input({airportsProps, airlineProps}) {
                     </FormInput>
                 </div>
 
-                <Link href={"/dashboard"}>
-                    <Button>
-                        <p>Track this flight</p>
-                    </Button>
-                </Link>
+                <div className={`${ clickable ? '' : 'pointer-events-none opacity-25' }`}>
+                    <Link href={"/dashboard"}>
+                        <Button>
+                                <p>Track this flight</p>
+                        </Button>
+                    </Link>
+
+                </div>
 
                 <div className="py-8 text-center">
                     <p>Need some inspiration?</p>
