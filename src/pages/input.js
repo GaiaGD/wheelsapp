@@ -23,7 +23,6 @@ export async function getServerSideProps(){
 }
 
 export default function Input({airportsProps, airlineProps}) {
-
     const {departureIata, arrivalIata, airlineIata, getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
 
     const [airportsDepartureMatches, setAirportsDepartureMatches] = useState([])
@@ -31,7 +30,6 @@ export default function Input({airportsProps, airlineProps}) {
     const [airlinesMatches, setAirlinesMatches] = useState([])
 
     let clickable = departureIata !== '' && arrivalIata !== '' && airlineIata !== ''
-    console.log(clickable)
     
     // {{ condition ? 'pointer-events-none bg-gray-400' : '' }}
 

@@ -4,7 +4,6 @@ export const AppContext = createContext({})
 
 export function AppContextProvider({children}){
 
-
     const [departureIata, setDepartureIata] = useState('')
     const [arrivalIata, setArrivalIata] = useState('')
     const [airlineIata, setAirlineIata] = useState('')

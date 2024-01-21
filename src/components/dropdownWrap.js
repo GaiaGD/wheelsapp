@@ -51,7 +51,8 @@ const DropdownWrap = ({ children, props }) => {
         // >
           <div
             ref={myInputRef}
-            style={{ width: 'calc(100% - 3rem)' }}
+            // 13rem is 10em for the mx-20 and 3em for the p-6
+            style={{ width: 'calc(600px - 13rem)' }}
             className="z-40 max-h-72 overflow-auto rounded-[20px] fixed backdrop-blur-md bg-white shadow-2xl"
           >
             {children}
