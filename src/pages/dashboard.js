@@ -6,26 +6,51 @@ import { Cloud, Sun, Plane } from "@/components/icons"
 import Link from "next/link"
 
 export default function Dashboard() {
-    const {departureIata, arrivalIata, airlineIata} = useContext(AppContext)
+    console.log("Dashboard component rendered");
 
+    const {departureIata, arrivalIata, airlineIata} = useContext(AppContext)
+    const [flightCode, setFlightCode] = useState('')
+    const [flightCodeInfo, setFlightCodeInfo] = useState('')
 
     // this comes from next.js api. The problem is that now it calls ALL FLIGHTS whenever departureIata, arrivalIata and airlineIata are empty.
     // limit this by avoiding the page to load without this data.
     // make it unaccessible? private routes?
     // or call the api with an action?
-      
-    async function fetchData() {
-        try {
-            const response = await fetch(`/api/airlab-data?departureIata=${departureIata}&arrivalIata=${arrivalIata}&airlineIata=${airlineIata}`);
-            const result = await response.json();
-          console.log(result); // The response from the API route
-        } catch (error) {
-          console.error('Error fetching data:', error);
+
+    useEffect(() => {
+        if (departureIata !== '' && arrivalIata !== '' && airlineIata !== '') {
+            async function fetchAirlabData() {
+                try {
+                    // const response = await fetch(`/api/airlab-data?departureIata=${departureIata}&arrivalIata=${arrivalIata}&airlineIata=${airlineIata}`);
+                    const response = await fetch(`/api/airlab-data`);
+                    const result = await response.json()
+                    setFlightCode(result)
+                } catch (error) {
+                console.error('Error fetching data:', error)
+                }
+            }
+            fetchAirlabData()
+ 
+            // using a random flightcode while i wait for the api subscription
+            let flightCodeTest = `AA61`
+
+            async function fetchAeroDataBox() {
+                try {
+                    // const response = await fetch(`/api/airlab-data?departureIata=${departureIata}&arrivalIata=${arrivalIata}&airlineIata=${airlineIata}`);
+                    const response = await fetch(`/api/aero-data-box?flightCode=${flightCodeTest}`);
+                    const result = await response.json()
+                    setFlightCodeInfo(result)
+                } catch (error) {
+                console.error('Error fetching data:', error)
+                }
+            }
+            fetchAeroDataBox()
+
         }
-      }
-      
-      // Call the async function
-      fetchData();
+    }, [])
+
+
+    console.log(flightCodeInfo)
 
     const backgroundImageTop = {
         backgroundImage: 'url("https://images.unsplash.com/photo-1529260830199-42c24126f198?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
