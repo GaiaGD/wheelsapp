@@ -5,6 +5,7 @@ export default async function handler(req, res) {
   
     // let airlabAPI = `https://airlabs.co/api/v9/flights?api_key=${airlabKey}&dep_iata=${departureIata}&arr_iata=${arrivalIata}&airline_iata=${airlineIata}`
     let airlabAPI = `https://api.publicapis.org/entries`
+    console.log(airlabAPI)
     const response = await fetch(airlabAPI)
     const airlabData = await response.json()
 

@@ -189,7 +189,9 @@ export default function Input({airportsProps, airlineProps}) {
                     </FormInput>
                 </div>
 
-                <div className={`${ clickable ? '' : 'pointer-events-none opacity-25' }`}>
+                <div
+                // className={`${ clickable ? '' : 'pointer-events-none opacity-25' }`}
+                >
                     <Link href={"/dashboard"}>
                         <Button>
                                 <p>Track this flight</p>
