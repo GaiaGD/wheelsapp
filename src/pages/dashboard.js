@@ -6,51 +6,20 @@ import { Cloud, Sun, Plane } from "@/components/icons"
 import Link from "next/link"
 
 export default function Dashboard() {
-    console.log("Dashboard component rendered");
+    const {departureIata, arrivalIata, airlineIata, flightCodeInfo} = useContext(AppContext)
+    console.log(flightCodeInfo[0].departure.airport.location.lat)
+    console.log(flightCodeInfo[0].departure.airport.location.lon)
 
-    const {departureIata, arrivalIata, airlineIata} = useContext(AppContext)
-    // const [flightCode, setFlightCode] = useState('')
-    // const [flightCodeInfo, setFlightCodeInfo] = useState('')
-
-    // this comes from next.js api. The problem is that now it calls ALL FLIGHTS whenever departureIata, arrivalIata and airlineIata are empty.
-    // limit this by avoiding the page to load without this data.
-    // make it unaccessible? private routes?
-    // or call the api with an action?
-
-    // useEffect(() => {
-    //     if (departureIata !== '' && arrivalIata !== '' && airlineIata !== '') {
-    //         async function fetchAirlabData() {
-    //             try {
-    //                 // const response = await fetch(`/api/airlab-data?departureIata=${departureIata}&arrivalIata=${arrivalIata}&airlineIata=${airlineIata}`);
-    //                 const response = await fetch(`/api/airlab-data`);
-    //                 const result = await response.json()
-    //                 setFlightCode(result)
-    //             } catch (error) {
-    //             console.error('Error fetching data:', error)
-    //             }
-    //         }
-    //         fetchAirlabData()
- 
-    //         // using a random flightcode while i wait for the api subscription
-    //         let flightCodeTest = `KL662`
-
-    //         async function fetchAeroDataBox() {
-    //             try {
-    //                 // const response = await fetch(`/api/airlab-data?departureIata=${departureIata}&arrivalIata=${arrivalIata}&airlineIata=${airlineIata}`);
-    //                 const response = await fetch(`/api/aero-data-box?flightCode=${flightCodeTest}`);
-    //                 const result = await response.json()
-    //                 setFlightCodeInfo(result)
-    //             } catch (error) {
-    //             console.error('Error fetching data:', error)
-    //             }
-    //         }
-    //         fetchAeroDataBox()
-
-    //     }
-    // }, [])
-
-
-    // console.log(flightCodeInfo)
+    const fetchWeatherData = async () => {
+        try {
+            const response = await fetch(`/api/weather?lat=${flightCodeInfo[0].departure.airport.location.lat}&lon=${flightCodeInfo[0].departure.airport.location.lon}`)
+            const data = await response.json()
+            console.log(data)
+        } catch (error) {
+            console.error('Error fetching data:', error)
+        }
+    }
+    fetchWeatherData()
 
     const backgroundImageTop = {
         backgroundImage: 'url("https://images.unsplash.com/photo-1529260830199-42c24126f198?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")',
@@ -85,12 +54,13 @@ export default function Dashboard() {
 
                             <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
                                 <div className="w-3/6">
-                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">FCO</h1>
-                                    <p className="text-sm">Rome, Italy</p>
+                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">{flightCodeInfo[0].departure.airport.iata}</h1>
+                                    <p className="text-sm">{flightCodeInfo[0].departure.airport.municipalityName}</p>
                                 </div>
                                 <div className="w-3/6">
-                                    <h1 className="text-4xl font-regular">10:40</h1>
-                                    <p className="text-sm">Delay: 20min</p>
+                                    <h1 className="text-4xl font-regular">{flightCodeInfo[0].departure.scheduledTimeLocal.substring(11, 16)}</h1>
+                                    <p className="text-sm">Actual time: {flightCodeInfo[0].departure.actualTimeLocal.substring(11, 16)}</p>
+                                    <p className="text-sm">{flightCodeInfo[0].departure.delay && `Delay: ${flightCodeInfo[0].departure.delay}`}</p>
                                 </div>
                             </div>
 
@@ -103,8 +73,8 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                                 <div className="w-3/6">
-                                    <p className="text-sm">Terminal: 20</p>
-                                    <p className="text-sm">Gate: 34</p>
+                                    <p className="text-sm">Terminal: {flightCodeInfo[0].departure.terminal}</p>
+                                    <p className="text-sm">Gate: {flightCodeInfo[0].departure.gate}</p>
                                 </div>
                             </div>
 
@@ -114,8 +84,8 @@ export default function Dashboard() {
                         <div className="px-4 text-center">
                             {/* <div className="relative border-b-dashed top-[50%] border-[1px] bg-brown-burnt mx-8"></div> */}
                             <p className="text-sm">FLIGHT</p>
-                            <h1 className="text-3xl font-medium">DL 6589</h1>
-                            <p className="text-sm">Delta Airlines</p>
+                            <h1 className="text-3xl font-medium">{flightCodeInfo[0].number}</h1>
+                            <p className="text-sm">{flightCodeInfo[0].airline.name}</p>
 
                             <div className="relative w-full h-8">
                                 <div className="top-[50%] absolute w-full border-dotted border-zinc-400 border-b-[1px]"></div>
@@ -131,19 +101,20 @@ export default function Dashboard() {
 
                             <div className="flex justify-between border-dotted border-zinc-400 border-b-[1px] py-2">
                                 <div className="w-3/6">
-                                    <h1 className="text-4xl font-regular">14:50</h1>
-                                    <p className="text-sm">Delay: 20min</p>
+                                    <h1 className="text-4xl font-regular">{flightCodeInfo[0].arrival.scheduledTimeLocal.substring(11, 16)}</h1>
+                                    <p className="text-sm">Actual time: {flightCodeInfo[0].arrival.actualTimeLocal.substring(11, 16)}</p>
+                                    <p className="text-sm">{flightCodeInfo[0].arrival.delay && `Delay: ${flightCodeInfo[0].arrival.delay}`}</p>
                                 </div>
                                 <div className="w-3/6">
-                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">JFK</h1>
-                                    <p className="text-sm">New York, USA</p>
+                                    <h1 className="text-outline text-4xl font-semibold text-outline text-off-white">{flightCodeInfo[0].arrival.airport.iata}</h1>
+                                    <p className="text-sm">{flightCodeInfo[0].arrival.airport.municipalityName}</p>
                                 </div>
                             </div>
 
                             <div className="flex justify-between py-2">
                                 <div className="w-3/6">
-                                    <p className="text-sm">Terminal: 20</p>
-                                    <p className="text-sm">Gate: 34</p>
+                                    <p className="text-sm">Terminal: {flightCodeInfo[0].arrival.terminal}</p>
+                                    <p className="text-sm">Gate: {flightCodeInfo[0].arrival.gate}</p>
                                 </div>
                                 <div className="w-3/6">
                                     <p className="text-sm">Cloudy</p>

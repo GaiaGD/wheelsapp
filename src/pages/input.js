@@ -23,7 +23,7 @@ export async function getServerSideProps(){
 }
 
 export default function Input({airportsProps, airlineProps}) {
-    const {departureIata, arrivalIata, airlineIata, getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
+    const {departureIata, arrivalIata, airlineIata, flightCodeInfo, getDepartureIata, getArrivalIata, getAirlineIata} = useContext(AppContext)
 
     const [airportsDepartureMatches, setAirportsDepartureMatches] = useState([])
     const [airportsArrivalMatches, setAirportsArrivalMatches] = useState([])
@@ -100,7 +100,7 @@ export default function Input({airportsProps, airlineProps}) {
     // dropdown component
     function Dropdown ({airportProp, onClick, index}){
         return (
-            <div onClick={onClick} index={index} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4">
+            <div key={airportProp.IATA} onClick={onClick} index={index} className="text-center font-light text-xs w-full p-1 border-b-[1px] py-4">
                 <p>{airportProp.city}</p>
                 <p><span className="font-semibold">{airportProp.IATA}</span>, {airportProp.name}</p>
                 <p>{airportProp.country}</p>
@@ -192,9 +192,9 @@ export default function Input({airportsProps, airlineProps}) {
                 <div
                 // className={`${ clickable ? '' : 'pointer-events-none opacity-25' }`}
                 >
-                    <Link href={"/dashboard"}>
+                    <Link href={flightCodeInfo.length > 1 ? "/results" : '/dashboard'}>
                         <Button>
-                                <p>Track this flight</p>
+                            <p>Track this flight</p>
                         </Button>
                     </Link>
 
