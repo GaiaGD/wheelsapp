@@ -8,11 +8,5 @@ export default async function handler(req, res) {
     console.log(weatherAPI)
     const response = await fetch(weatherAPI)
     const weatherData = await response.json()
-
     res.status(200).json({ weatherData })
   }
-
-  // yes
-  // https://api.openweathermap.org/data/2.5/onecall?lat=52.3086&lon=4.763889&appid=c9d1645108ea158910af690dc88c1d2e
-  // no 
-  // https://api.openweathermap.org/data/2.5/onecall?lat=48.1103lon=16.5697&appid=050325e00286f5aed36dc5fd183fa8d6&units=imperial
